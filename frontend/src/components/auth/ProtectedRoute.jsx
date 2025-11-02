@@ -1,7 +1,7 @@
 import { useAuthStore } from '../../store/authStore';
 import { Navigate, Outlet } from 'react-router-dom';
 
-function ProtectedRoute({ allowedRoles }) {
+function ProtectedRoute({ children, allowedRoles }) {
   const { isAuthenticated, user } = useAuthStore();
 
   if (!isAuthenticated) {
@@ -12,7 +12,7 @@ function ProtectedRoute({ allowedRoles }) {
     return <Navigate to="/" replace />;
   }
 
-  return <Outlet />;
+  return children;
 }
 
 export default ProtectedRoute;

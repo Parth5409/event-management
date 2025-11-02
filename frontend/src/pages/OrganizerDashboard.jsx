@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+console.log('OrganizerDashboard.jsx module loaded');
 import { Link } from 'react-router-dom';
 import { organizerApi } from '../lib/api'; // Assuming you'll create this
 import { useAuthStore } from '../store/authStore';
@@ -15,8 +16,9 @@ function OrganizerDashboard() {
 
   useEffect(() => {
     const fetchEvents = async () => {
+      if (!user?.userId) return;
+
       try {
-        // This API endpoint needs to be created
         const response = await organizerApi.getOrganizerEvents(); 
         setEvents(response.data);
       } catch (error) {
@@ -26,10 +28,8 @@ function OrganizerDashboard() {
       }
     };
 
-    if (user?.role === 'organizer') {
-      fetchEvents();
-    }
-  }, [user]);
+    fetchEvents();
+  }, [user?.userId]);
 
   const handleDelete = async (eventId) => {
     if (!window.confirm('Are you sure you want to delete this event?')) return;
