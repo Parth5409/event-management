@@ -1,0 +1,84 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+*.local
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Editor directories and files
+.vscode/
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Vite-specific
+.vite/
+
+# Cypress
+cypress/
+cypress.json
+
+# Playwright
+playwright-report/
+.playwright/
+
+# Storybook
+storybook-static/
+
+# Next.js
+.next/
+
+# Nuxt.js
+.nuxt/
+.output/
+
+# SvelteKit
+.svelte-kit/
+
+# Gatsby
+.cache/
+public/
+
+# VuePress
+.vuepress/dist/
+
+# Docusaurus
+build/
+
+# Yarn
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+
+# pnpm
+.pnpm-store/
+
+# npm
+.npm/
+
+# misc
+*.tgz
+.eslintcache
+.prettierignore
