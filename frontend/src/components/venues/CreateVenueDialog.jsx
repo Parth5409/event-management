@@ -16,6 +16,7 @@ import { venueApi } from '../../lib/api';
 import { toast } from 'sonner';
 
 export function CreateVenueDialog({ onVenueCreated }) {
+  const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
   const [capacity, setCapacity] = useState('');
@@ -33,10 +34,11 @@ export function CreateVenueDialog({ onVenueCreated }) {
       const response = await venueApi.createVenue(newVenue);
       toast.success('Venue created successfully!');
       onVenueCreated(response.data); // Pass the new venue back to the parent
-      // Reset form
+      // Reset form and close dialog
       setName('');
       setLocation('');
       setCapacity('');
+      setOpen(false);
     } catch (error) {
       toast.error('Failed to create venue.');
     } finally {
@@ -45,7 +47,7 @@ export function CreateVenueDialog({ onVenueCreated }) {
   };
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button variant="outline">Create New Venue</Button>
       </SheetTrigger>
@@ -97,11 +99,9 @@ export function CreateVenueDialog({ onVenueCreated }) {
             </div>
           </div>
           <SheetFooter>
-            <SheetClose asChild>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Saving...' : 'Save changes'}
-              </Button>
-            </SheetClose>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Saving...' : 'Save changes'}
+            </Button>
           </SheetFooter>
         </form>
       </SheetContent>
