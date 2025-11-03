@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-console.log('OrganizerDashboard.jsx module loaded');
-import { Link } from 'react-router-dom';
-import { organizerApi } from '../lib/api'; // Assuming you'll create this
+import { Link, useLocation } from 'react-router-dom';
+import { organizerApi, eventApi } from '../lib/api'; // Assuming you'll create this
 import { useAuthStore } from '../store/authStore';
 import { toast } from 'sonner';
 import { Button } from '../components/components/ui/button';
@@ -13,15 +12,20 @@ function OrganizerDashboard() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuthStore();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchEvents = async () => {
-      if (!user?.userId) return;
+      if (!user?.userId) {
+        setLoading(false);
+        return;
+      }
 
       try {
         const response = await organizerApi.getOrganizerEvents(); 
         setEvents(response.data);
       } catch (error) {
+        console.error('OrganizerDashboard: Failed to load your events:', error);
         toast.error('Failed to load your events.');
       } finally {
         setLoading(false);
@@ -29,7 +33,7 @@ function OrganizerDashboard() {
     };
 
     fetchEvents();
-  }, [user?.userId]);
+  }, [user?.userId, location.pathname]);
 
   const handleDelete = async (eventId) => {
     if (!window.confirm('Are you sure you want to delete this event?')) return;

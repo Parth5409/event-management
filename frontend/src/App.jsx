@@ -22,24 +22,26 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 function App() {
   return (
     <Router>
-      <Navbar />
-      <main className="flex-grow">
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/events/:id" element={<EventDetailsPage />} />
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow">
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/events/:id" element={<EventDetailsPage />} />
 
-          {/* Protected Routes */}
-          <Route path="/events/new" element={<ProtectedRoute allowedRoles={['organizer', 'admin']}><CreateEventPage /></ProtectedRoute>} />
-          <Route path="/my-registrations" element={<ProtectedRoute allowedRoles={['attendee', 'organizer', 'admin']}><MyRegistrationsPage /></ProtectedRoute>} />
-          <Route path="/organizer/dashboard" element={<ProtectedRoute allowedRoles={['organizer']}><OrganizerDashboard /></ProtectedRoute>} />
-          <Route path="/organizer/events/:id/registrations" element={<ProtectedRoute allowedRoles={['organizer']}><EventRegistrationsPage /></ProtectedRoute>} />
-        </Routes>
-      </main>
-      <Footer />
+            {/* Protected Routes */}
+            <Route path="/events/new" element={<ProtectedRoute allowedRoles={['organizer', 'admin']}><CreateEventPage /></ProtectedRoute>} />
+            <Route path="/my-registrations" element={<ProtectedRoute allowedRoles={['attendee', 'organizer', 'admin']}><MyRegistrationsPage /></ProtectedRoute>} />
+            <Route path="/organizer/dashboard" element={<ProtectedRoute allowedRoles={['organizer']}><OrganizerDashboard /></ProtectedRoute>} />
+            <Route path="/organizer/events/:id/registrations" element={<ProtectedRoute allowedRoles={['organizer']}><EventRegistrationsPage /></ProtectedRoute>} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
       <Toaster />
     </Router>
   );

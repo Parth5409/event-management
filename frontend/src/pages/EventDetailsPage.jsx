@@ -17,12 +17,21 @@ function EventDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isRegistering, setIsRegistering] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
 
   useEffect(() => {
-    const fetchEvent = async () => {
+    const fetchEventAndRegistrationStatus = async () => {
       try {
-        const response = await eventApi.getEventById(id);
-        setEvent(response.data);
+        // Fetch event details
+        const eventResponse = await eventApi.getEventById(id);
+        setEvent(eventResponse.data);
+
+        // If user is an attendee, check if they are already registered
+        if (isAuthenticated && user?.role === 'attendee') {
+          const regsResponse = await registrationApi.getUserRegistrations(user.userId);
+          const isAlreadyRegistered = regsResponse.data.some(reg => reg.eventId === parseInt(id));
+          setIsRegistered(isAlreadyRegistered);
+        }
       } catch (err) {
         setError(err);
         toast.error('Failed to load event details.');
@@ -31,8 +40,8 @@ function EventDetailsPage() {
       }
     };
 
-    fetchEvent();
-  }, [id]);
+    fetchEventAndRegistrationStatus();
+  }, [id, user, isAuthenticated]);
 
   const handleRegister = async () => {
     if (!isAuthenticated || !user) {
@@ -49,6 +58,7 @@ function EventDetailsPage() {
     try {
       await registrationApi.registerForEvent(id, user.userId);
       toast.success('Successfully registered for the event!');
+      setIsRegistered(true); // Update UI immediately
     } catch (err) {
       console.error('Registration error:', err);
     } finally {
@@ -92,14 +102,20 @@ function EventDetailsPage() {
           <p className="text-lg text-gray-600 mb-6">{event.description}</p>
           
           {isAuthenticated && user?.role === 'attendee' && (
-            <Button 
-              onClick={handleRegister} 
-              disabled={isRegistering} 
-              size="lg"
-              className="bg-purple-600 hover:bg-purple-700"
-            >
-              {isRegistering ? 'Registering...' : 'Register for Event'}
-            </Button>
+            isRegistered ? (
+              <Button size="lg" disabled>
+                You are Registered
+              </Button>
+            ) : (
+              <Button 
+                onClick={handleRegister} 
+                disabled={isRegistering} 
+                size="lg"
+                className="bg-purple-600 hover:bg-purple-700"
+              >
+                {isRegistering ? 'Registering...' : 'Register for Event'}
+              </Button>
+            )
           )}
           {!isAuthenticated && (
             <p className="text-gray-500">Please <Link to="/login" className="underline text-purple-600">log in</Link> to register for this event.</p>
